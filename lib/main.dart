@@ -101,14 +101,6 @@ class _HomeState extends State<Home> {
         child: CheckboxListTile(
             title: Text(_toDoList[index]['title']),
             value: _toDoList[index]['done'],
-            secondary: CircleAvatar(
-              backgroundColor:
-                  _toDoList[index]['done'] ? Colors.blueAccent : Colors.red,
-              child: Icon(
-                _toDoList[index]['done'] ? Icons.check : Icons.clear,
-                color: Colors.white,
-              ),
-            ),
             onChanged: (done) {
               setState(() {
                 _toDoList[index]['done'] = done;
