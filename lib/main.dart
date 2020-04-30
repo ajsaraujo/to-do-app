@@ -63,6 +63,26 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Widget _buildItem(context, index) {
+    return CheckboxListTile(
+      title: Text(_toDoList[index]['title']),
+      value: _toDoList[index]['done'],
+      secondary: CircleAvatar(
+        backgroundColor: _toDoList[index]['done'] ? Colors.blueAccent : Colors.red,
+        child: Icon(
+          _toDoList[index]['done'] ? Icons.check : Icons.clear,
+          color: Colors.white,
+        ),
+      ),
+      onChanged: (done) {
+        setState(() {
+          _toDoList[index]['done'] = done;
+          _saveToDosToFile();
+        });
+      }
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,23 +119,8 @@ class _HomeState extends State<Home> {
                 child: ListView.builder(
               padding: EdgeInsets.only(top: 10.0),
               itemCount: _toDoList.length,
-              itemBuilder: (context, index) {
-                return CheckboxListTile(
-                  title: Text(_toDoList[index]['title']),
-                  value: _toDoList[index]['done'],
-                  secondary: CircleAvatar(
-                    child: Icon(
-                        _toDoList[index]['done'] ? Icons.check : Icons.error),
-                  ),
-                  onChanged: (done) {
-                    setState(() {
-                      _toDoList[index]['done'] = done;
-                      _saveToDosToFile();
-                    });
-                  },
-                );
-              },
-            ))
+              itemBuilder: _buildItem
+             ) )
           ],
         ));
   }
