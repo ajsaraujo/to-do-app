@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
+import 'controllers/file_controller.dart';
+
 void main() => runApp(MaterialApp(
       home: Home(),
     ));
@@ -23,7 +25,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    _readToDosFromFile().then((jsonData) {
+    FileController.readToDosFromFile().then((jsonData) {
       setState(() {
         _toDoList = json.decode(jsonData);
       });
@@ -41,28 +43,8 @@ class _HomeState extends State<Home> {
 
       newToDoController.clear();
 
-      _saveToDosToFile();
+      FileController.saveToDosToFile(_toDoList);
     });
-  }
-
-  Future<File> _getToDosFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/tasks.json');
-  }
-
-  Future<File> _saveToDosToFile() async {
-    String data = json.encode(_toDoList);
-    final file = await _getToDosFile();
-    return file.writeAsString(data);
-  }
-
-  Future<String> _readToDosFromFile() async {
-    try {
-      final file = await _getToDosFile();
-      return file.readAsString();
-    } catch (err) {
-      print(err);
-    }
   }
 
   Future<Null> _sortToDos() async {
@@ -75,7 +57,7 @@ class _HomeState extends State<Home> {
         return 1;
       });
 
-      _saveToDosToFile();
+      FileController.saveToDosToFile(_toDoList);
     });
   }
 
@@ -94,7 +76,7 @@ class _HomeState extends State<Home> {
             _lastRemovedToDo = Map.from(_toDoList[index]);
             _lastRemovedToDoIndex = index;
             _toDoList.removeAt(index);
-            _saveToDosToFile();
+            FileController.saveToDosToFile(_toDoList);
 
             final undoSnackBar = SnackBar(
                 content: Text('To do "${_lastRemovedToDo['title']}" removed',
@@ -108,7 +90,7 @@ class _HomeState extends State<Home> {
                       setState(() {
                         _toDoList.insert(
                             _lastRemovedToDoIndex, _lastRemovedToDo);
-                        _saveToDosToFile();
+                        FileController.saveToDosToFile(_toDoList);
                       });
                     }));
 
@@ -130,7 +112,7 @@ class _HomeState extends State<Home> {
             onChanged: (done) {
               setState(() {
                 _toDoList[index]['done'] = done;
-                _saveToDosToFile();
+                FileController.saveToDosToFile(_toDoList);
               });
             }));
   }
