@@ -30,14 +30,6 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<Null> _onRefresh() async {
-    await Future.delayed(Duration(seconds: 1));
-
-    setState(() {
-      ToDoController.sortToDos();
-    });
-  } 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
