@@ -36,50 +36,7 @@ class _HomeState extends State<Home> {
     setState(() {
       ToDoController.sortToDos();
     });
-  }
-
-  Widget _buildItem(context, index) {
-    return Dismissible(
-        key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
-        background: Container(
-          color: Colors.red,
-          child: Align(
-              alignment: Alignment(-0.9, 0.0),
-              child: Icon(Icons.delete_forever, color: Colors.white)),
-        ),
-        direction: DismissDirection.startToEnd,
-        onDismissed: (direction) {
-          setState(() {
-            ToDoController.removeToDo(index);
-
-            final undoSnackBar = SnackBar(
-                content: Text(
-                    'To do "${ToDoController.lastRemovedToDo}" removed',
-                    style: TextStyle(color: Colors.white)),
-                backgroundColor: Colors.blueAccent,
-                duration: Duration(seconds: 3),
-                action: SnackBarAction(
-                    textColor: Colors.white,
-                    label: 'UNDO',
-                    onPressed: () {
-                      setState(() {
-                        ToDoController.restoreLastDeletedToDo();
-                      });
-                    }));
-
-            Scaffold.of(context).removeCurrentSnackBar();
-            Scaffold.of(context).showSnackBar(undoSnackBar);
-          });
-        },
-        child: CheckboxListTile(
-            title: Text(ToDoController.toDoList[index]['title']),
-            value: ToDoController.toDoList[index]['done'],
-            onChanged: (done) {
-              setState(() {
-                ToDoController.setToDoValue(index, done);
-              });
-            }));
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +56,7 @@ class _HomeState extends State<Home> {
                 });
               }),
             ),
-            ToDoListView(buildItem: _buildItem, onRefresh: _onRefresh),
+            ToDoListView(),
           ],
         ));
   }
