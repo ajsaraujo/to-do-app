@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 class FileController {
   static Future<File> getToDosFile() async {
     final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/tasks.json');
+    return File('${directory.path}/new_tasks.json');
   }
 
   static Future<File> saveToDosToFile(toDoList) async {

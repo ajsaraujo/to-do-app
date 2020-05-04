@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 import 'controllers/file_controller.dart';
+import 'controllers/to_do_controller.dart';
 
 void main() => runApp(MaterialApp(
       home: Home(),
@@ -16,10 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List _toDoList = [];
-  Map<String, dynamic> _lastRemovedToDo;
-  int _lastRemovedToDoIndex;
-  final newToDoController = TextEditingController();
+  final textFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -27,37 +23,16 @@ class _HomeState extends State<Home> {
 
     FileController.readToDosFromFile().then((jsonData) {
       setState(() {
-        _toDoList = json.decode(jsonData);
+        ToDoController.toDoList = json.decode(jsonData);
       });
     });
   }
 
-  void _addToDo() {
-    setState(() {
-      Map<String, dynamic> newToDo = Map();
-
-      newToDo['title'] = newToDoController.text;
-      newToDo['done'] = false;
-
-      _toDoList.add(newToDo);
-
-      newToDoController.clear();
-
-      FileController.saveToDosToFile(_toDoList);
-    });
-  }
-
-  Future<Null> _sortToDos() async {
+  Future<Null> _onRefresh() async {
     await Future.delayed(Duration(seconds: 1));
 
     setState(() {
-      _toDoList.sort((toDoA, toDoB) {
-        if (toDoA['done'] == toDoB['done']) return 0;
-        if (!toDoA['done']) return -1;
-        return 1;
-      });
-
-      FileController.saveToDosToFile(_toDoList);
+      ToDoController.sortToDos();
     });
   }
 
@@ -73,13 +48,10 @@ class _HomeState extends State<Home> {
         direction: DismissDirection.startToEnd,
         onDismissed: (direction) {
           setState(() {
-            _lastRemovedToDo = Map.from(_toDoList[index]);
-            _lastRemovedToDoIndex = index;
-            _toDoList.removeAt(index);
-            FileController.saveToDosToFile(_toDoList);
+            ToDoController.removeToDo(index);
 
             final undoSnackBar = SnackBar(
-                content: Text('To do "${_lastRemovedToDo['title']}" removed',
+                content: Text('To do "${ToDoController.lastRemovedToDo}" removed',
                     style: TextStyle(color: Colors.white)),
                 backgroundColor: Colors.blueAccent,
                 duration: Duration(seconds: 3),
@@ -88,9 +60,7 @@ class _HomeState extends State<Home> {
                     label: 'UNDO',
                     onPressed: () {
                       setState(() {
-                        _toDoList.insert(
-                            _lastRemovedToDoIndex, _lastRemovedToDo);
-                        FileController.saveToDosToFile(_toDoList);
+                        ToDoController.restoreLastDeletedToDo();
                       });
                     }));
 
@@ -99,12 +69,11 @@ class _HomeState extends State<Home> {
           });
         },
         child: CheckboxListTile(
-            title: Text(_toDoList[index]['title']),
-            value: _toDoList[index]['done'],
+            title: Text(ToDoController.toDoList[index]['title']),
+            value: ToDoController.toDoList[index]['done'],
             onChanged: (done) {
               setState(() {
-                _toDoList[index]['done'] = done;
-                FileController.saveToDosToFile(_toDoList);
+                ToDoController.setToDoValue(index, done);
               });
             }));
   }
@@ -125,7 +94,7 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-                      controller: newToDoController,
+                      controller: textFieldController,
                       decoration: InputDecoration(
                         labelText: 'New To Do',
                         labelStyle: TextStyle(color: Colors.blueAccent),
@@ -136,17 +105,22 @@ class _HomeState extends State<Home> {
                     color: Colors.blueAccent,
                     child: Text('ADD'),
                     textColor: Colors.white,
-                    onPressed: _addToDo,
+                    onPressed: () {
+                      setState(() {
+                        ToDoController.addToDo(textFieldController.text);
+                        textFieldController.clear();
+                      });
+                    },
                   )
                 ],
               ),
             ),
             Expanded(
                 child: RefreshIndicator(
-                    onRefresh: _sortToDos,
+                    onRefresh: _onRefresh,
                     child: ListView.builder(
                         padding: EdgeInsets.only(top: 10.0),
-                        itemCount: _toDoList.length,
+                        itemCount: ToDoController.toDoList.length,
                         itemBuilder: _buildItem)))
           ],
         ));
