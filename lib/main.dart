@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:todo_list/widgets/input_section.dart';
 
 import 'controllers/file_controller.dart';
 import 'controllers/to_do_controller.dart';
@@ -90,30 +91,11 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: textFieldController,
-                      decoration: InputDecoration(
-                        labelText: 'New To Do',
-                        labelStyle: TextStyle(color: Colors.blueAccent),
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    color: Colors.blueAccent,
-                    child: Text('ADD'),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        ToDoController.addToDo(textFieldController.text);
-                        textFieldController.clear();
-                      });
-                    },
-                  )
-                ],
-              ),
+              child: InputSection((String newToDoTitle) {
+                setState(() {
+                  ToDoController.addToDo(newToDoTitle);
+                });
+              }),
             ),
             Expanded(
                 child: RefreshIndicator(
