@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:todo_list/widgets/input_section.dart';
+import 'package:todo_list/widgets/to_do_list_view.dart';
 
 import 'controllers/file_controller.dart';
 import 'controllers/to_do_controller.dart';
@@ -52,7 +53,8 @@ class _HomeState extends State<Home> {
             ToDoController.removeToDo(index);
 
             final undoSnackBar = SnackBar(
-                content: Text('To do "${ToDoController.lastRemovedToDo}" removed',
+                content: Text(
+                    'To do "${ToDoController.lastRemovedToDo}" removed',
                     style: TextStyle(color: Colors.white)),
                 backgroundColor: Colors.blueAccent,
                 duration: Duration(seconds: 3),
@@ -97,13 +99,7 @@ class _HomeState extends State<Home> {
                 });
               }),
             ),
-            Expanded(
-                child: RefreshIndicator(
-                    onRefresh: _onRefresh,
-                    child: ListView.builder(
-                        padding: EdgeInsets.only(top: 10.0),
-                        itemCount: ToDoController.toDoList.length,
-                        itemBuilder: _buildItem)))
+            ToDoListView(buildItem: _buildItem, onRefresh: _onRefresh),
           ],
         ));
   }
