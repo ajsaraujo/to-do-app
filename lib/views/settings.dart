@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:todo_list/widgets/my_app_bar.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -10,9 +11,14 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(title: 'Settings'),
+      appBar: MyAppBar(title: 'Settings', hasReturnButton: true),
       body: Center(
-        child: Text('Welcome to the amazing settings page!')
+        child: MaterialColorPicker(
+          allowShades: false,
+          onMainColorChange: (ColorSwatch color) {
+            print('O usuário escolheu uma cor!');
+          },
+        )
       )
     );
   }

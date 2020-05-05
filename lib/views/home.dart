@@ -30,11 +30,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(title: 'To dos', actions: <Widget>[
+        appBar: MyAppBar(title: 'To dos', hasReturnButton: false, actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings, color: Colors.white),
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed('/settings');
+              Navigator.of(context).pushNamed('/settings');
             }
           )
         ],),
