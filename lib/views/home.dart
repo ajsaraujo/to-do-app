@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/controllers/file_controller.dart';
 import 'package:todo_list/controllers/to_do_controller.dart';
 import 'package:todo_list/widgets/input_section.dart';
+import 'package:todo_list/widgets/my_app_bar.dart';
 import 'package:todo_list/widgets/to_do_list_view.dart';
 
 class Home extends StatefulWidget {
@@ -29,11 +30,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('To Dos'),
-          backgroundColor: Colors.blueAccent,
-          centerTitle: true,
-        ),
+        appBar: MyAppBar(title: 'To dos', actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/settings');
+            }
+          )
+        ],),
         body: Column(
           children: <Widget>[
             Container(
