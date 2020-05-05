@@ -9,8 +9,13 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (_) => Home());
       case '/settings':
-        return MaterialPageRoute(builder: (_) => SettingsPage());
-      default: 
+        if (settings.arguments is Function) {
+          return MaterialPageRoute(
+              builder: (_) =>
+                  SettingsPage(changeThemeCallback: settings.arguments));
+        }
+        return _errorRoute();
+      default:
         return _errorRoute();
     }
   }
@@ -18,11 +23,7 @@ class RouteGenerator {
   static Route<dynamic> _errorRoute() {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
-        appBar: MyAppBar(title: 'ERROR'),
-        body: Center(
-          child: Text('ERROR')
-        )
-      );
+          appBar: MyAppBar(title: 'ERROR'), body: Center(child: Text('ERROR')));
     });
   }
 }

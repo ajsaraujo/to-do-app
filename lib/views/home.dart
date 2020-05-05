@@ -9,6 +9,10 @@ import 'package:todo_list/widgets/my_app_bar.dart';
 import 'package:todo_list/widgets/to_do_list_view.dart';
 
 class Home extends StatefulWidget {
+  Function changeThemeCallback;
+
+  Home({this.changeThemeCallback});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -30,14 +34,17 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(title: 'To dos', hasReturnButton: false, actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context).pushNamed('/settings');
-            }
-          )
-        ],),
+        appBar: MyAppBar(
+          title: 'To dos',
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.settings, color: Colors.white),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/settings',
+                      arguments: this.widget.changeThemeCallback);
+                })
+          ],
+        ),
         body: Column(
           children: <Widget>[
             Container(

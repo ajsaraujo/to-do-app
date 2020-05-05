@@ -32,11 +32,11 @@ class ToDoListViewState extends State<ToDoListView> {
             final undoSnackBar = SnackBar(
                 content: Text(
                     'To do "${ToDoController.lastRemovedToDo}" removed',
-                    style: TextStyle(color: Colors.white)),
-                backgroundColor: Colors.blueAccent,
+                    style: TextStyle(color: Theme.of(context).accentColor)),
+                backgroundColor: Theme.of(context).primaryColor,
                 duration: Duration(seconds: 3),
                 action: SnackBarAction(
-                    textColor: Colors.white,
+                    textColor: Theme.of(context).accentColor,
                     label: 'UNDO',
                     onPressed: () {
                       setState(() {
@@ -51,6 +51,8 @@ class ToDoListViewState extends State<ToDoListView> {
         child: CheckboxListTile(
             title: Text(ToDoController.toDoList[index]['title']),
             value: ToDoController.toDoList[index]['done'],
+            checkColor: Theme.of(context).accentColor,
+            activeColor: Theme.of(context).primaryColor,
             onChanged: (done) {
               setState(() {
                 ToDoController.setToDoValue(index, done);

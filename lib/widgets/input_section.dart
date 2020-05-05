@@ -22,12 +22,12 @@ class _InputSectionState extends State<InputSection> {
             controller: textFieldController,
             decoration: InputDecoration(
               labelText: 'New To Do',
-              labelStyle: TextStyle(color: Colors.blueAccent),
+              labelStyle: TextStyle(color: Theme.of(context).accentColor),
             ),
           ),
         ),
         RaisedButton(
-          color: Colors.blueAccent,
+          color: Theme.of(context).primaryColor,
           child: Text('ADD'),
           textColor: Colors.white,
           onPressed: () {
