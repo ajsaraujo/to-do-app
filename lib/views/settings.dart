@@ -14,33 +14,50 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   ColorSwatch _appColor = Colors.blue;
 
+  void changeAppColor({ColorSwatch newPrimaryColor}) {
+    // We need to redraw this screen to change the circle's color.
+    setState( () => _appColor = newPrimaryColor );
+
+    this.widget.changeThemeCallback(newPrimaryColor: newPrimaryColor);
+  }
+
   void _showColorPickerDialog() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           ColorSwatch colorBuffer;
+
+          final colorPicker = MaterialColorPicker(
+            allowShades: false,
+            onMainColorChange: (ColorSwatch color) => colorBuffer = color,
+            selectedColor: _appColor,
+          );
+
+          final actionButtonTextStyle = TextStyle(color: Theme.of(context).primaryColor);
+
+          final cancelButton = FlatButton(
+            child: Text('CANCEL', style: actionButtonTextStyle),
+            onPressed: Navigator.of(context).pop,
+          );
+
+          final okButton = FlatButton(
+            child: Text('OK', style: actionButtonTextStyle),
+            onPressed: () {
+              Navigator.of(context).pop();
+              changeAppColor(newPrimaryColor: colorBuffer);
+            },
+          );
+
           return AlertDialog(
             contentPadding: const EdgeInsets.all(6.0),
             title: Text('Pick a color'),
-            content: Container(height: 250.0, child: MaterialColorPicker(
-              allowShades: false,
-              onMainColorChange: (ColorSwatch color) { colorBuffer = color; },
-              selectedColor: _appColor,
-            )),
+            content: Container(
+                height: 250.0,
+                child: colorPicker,
+                ),
             actions: [
-              FlatButton(
-                  child: Text('CANCEL', style: TextStyle(color: Colors.blue)),
-                  onPressed: Navigator.of(context).pop),
-              FlatButton(
-                  child: Text('OK', style: TextStyle(color: Colors.blue)),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      // This is needed so the circle color changes.
-                      _appColor = colorBuffer;
-                    });
-                    this.widget.changeThemeCallback(newPrimaryColor: _appColor);
-                  })
+              cancelButton, 
+              okButton
             ],
           );
         });
@@ -75,6 +92,6 @@ class _SettingsPageState extends State<SettingsPage> {
             });
           },
         )*/
-            ));
+        ));
   }
 }
