@@ -12,15 +12,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  ColorSwatch _appColor = Colors.blue;
-
-  void changeAppColor({ColorSwatch newPrimaryColor}) {
-    // We need to redraw this screen to change the circle's color.
-    setState( () => _appColor = newPrimaryColor );
-
-    this.widget.changeThemeCallback(newPrimaryColor: newPrimaryColor);
-  }
-
   void _showColorPickerDialog() {
     showDialog(
         context: context,
@@ -30,10 +21,11 @@ class _SettingsPageState extends State<SettingsPage> {
           final colorPicker = MaterialColorPicker(
             allowShades: false,
             onMainColorChange: (ColorSwatch color) => colorBuffer = color,
-            selectedColor: _appColor,
+            selectedColor: Theme.of(context).primaryColor,
           );
 
-          final actionButtonTextStyle = TextStyle(color: Theme.of(context).primaryColor);
+          final actionButtonTextStyle =
+              TextStyle(color: Theme.of(context).primaryColor);
 
           final cancelButton = FlatButton(
             child: Text('CANCEL', style: actionButtonTextStyle),
@@ -44,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Text('OK', style: actionButtonTextStyle),
             onPressed: () {
               Navigator.of(context).pop();
-              changeAppColor(newPrimaryColor: colorBuffer);
+              this.widget.changeThemeCallback(newPrimaryColor: colorBuffer);
             },
           );
 
@@ -52,13 +44,10 @@ class _SettingsPageState extends State<SettingsPage> {
             contentPadding: const EdgeInsets.all(6.0),
             title: Text('Pick a color'),
             content: Container(
-                height: 250.0,
-                child: colorPicker,
-                ),
-            actions: [
-              cancelButton, 
-              okButton
-            ],
+              height: 250.0,
+              child: colorPicker,
+            ),
+            actions: [cancelButton, okButton],
           );
         });
   }
@@ -75,23 +64,13 @@ class _SettingsPageState extends State<SettingsPage> {
               trailing: Material(
                 shape: const CircleBorder(),
                 child: CircleAvatar(
-                  backgroundColor: _appColor,
+                  backgroundColor: Theme.of(context).primaryColor,
                   radius: 16,
                 ),
               ),
               onTap: _showColorPickerDialog,
             ),
           ],
-        )
-            /*child: MaterialColorPicker(
-          allowShades: false,
-          onMainColorChange: (ColorSwatch color) {
-            setState(() {
-              print('mudou a cor!');
-              this.widget.changeThemeCallback(newPrimaryColor: color);
-            });
-          },
-        )*/
-        ));
+        )));
   }
 }

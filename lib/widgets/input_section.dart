@@ -22,7 +22,7 @@ class _InputSectionState extends State<InputSection> {
             controller: textFieldController,
             decoration: InputDecoration(
               labelText: 'New To Do',
-              labelStyle: TextStyle(color: Theme.of(context).accentColor),
+              labelStyle: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
         ),

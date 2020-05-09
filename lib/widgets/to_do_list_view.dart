@@ -64,6 +64,7 @@ class ToDoListViewState extends State<ToDoListView> {
   Widget build(BuildContext context) {
     return Expanded(
         child: RefreshIndicator(
+            color: Theme.of(context).primaryColor,
             onRefresh: _onRefresh,
             child: ListView.builder(
                 padding: EdgeInsets.only(top: 10.0),
