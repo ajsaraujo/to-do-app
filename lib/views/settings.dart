@@ -18,10 +18,15 @@ class _SettingsPageState extends State<SettingsPage> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
+          ColorSwatch colorBuffer;
           return AlertDialog(
             contentPadding: const EdgeInsets.all(6.0),
             title: Text('Pick a color'),
-            content: Container(height: 250.0, child: MaterialColorPicker()),
+            content: Container(height: 250.0, child: MaterialColorPicker(
+              allowShades: false,
+              onMainColorChange: (ColorSwatch color) { colorBuffer = color; },
+              selectedColor: _appColor,
+            )),
             actions: [
               FlatButton(
                   child: Text('CANCEL', style: TextStyle(color: Colors.blue)),
@@ -30,6 +35,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Text('OK', style: TextStyle(color: Colors.blue)),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    setState(() {
+                      // This is needed so the circle color changes.
+                      _appColor = colorBuffer;
+                    });
+                    this.widget.changeThemeCallback(newPrimaryColor: _appColor);
                   })
             ],
           );
