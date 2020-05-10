@@ -3,7 +3,7 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 import 'package:todo_list/widgets/my_app_bar.dart';
 
 class SettingsPage extends StatefulWidget {
-  Function changeThemeCallback;
+  final Function changeThemeCallback;
 
   SettingsPage({this.changeThemeCallback});
 
@@ -16,11 +16,13 @@ class _SettingsPageState extends State<SettingsPage> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          ColorSwatch colorBuffer;
+          Color colorBuffer;
 
           final colorPicker = MaterialColorPicker(
-            allowShades: false,
-            onMainColorChange: (ColorSwatch color) => colorBuffer = color,
+            onColorChange: (Color color) {
+              colorBuffer = color;
+              print('Você selecionou a cor ${colorBuffer.value}');
+            },
             selectedColor: Theme.of(context).primaryColor,
           );
 

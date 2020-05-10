@@ -10,11 +10,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ColorSwatch _primaryColor;
+  Color _primaryColor;
   Color _accentColor;
   Brightness _brightness; 
 
-  void changeTheme({ColorSwatch newPrimaryColor, Color newAccentColor, Brightness newBrightness}) {
+  void changeTheme({Color newPrimaryColor, Color newAccentColor, Brightness newBrightness}) {
     setState(() {
       print('Oi, tô no callback!');
       _primaryColor = newPrimaryColor ?? _primaryColor;
@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
-        primarySwatch: _primaryColor ?? Colors.blue,
+        primaryColor: _primaryColor ?? Colors.blue,
         accentColor: Colors.white,
         brightness: Brightness.light,
       ),
