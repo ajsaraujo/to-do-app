@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/controllers/to_do_controller.dart';
 
 class InputSection extends StatefulWidget {
   Function callback;
