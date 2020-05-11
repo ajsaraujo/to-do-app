@@ -62,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ListView(
           children: <Widget>[
             ListTile(
-              title: Text('Main color'),
+              title: Text('Main color', style: TextStyle(fontSize: 18.0)),
               trailing: Material(
                 shape: const CircleBorder(),
                 child: CircleAvatar(

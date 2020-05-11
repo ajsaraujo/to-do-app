@@ -1,13 +1,26 @@
 import 'file_controller.dart';
 
 class ToDoController {
-  static List toDoList = [];
-  static Map<String, dynamic> _lastRemovedToDo;
-  static int _lastRemovedToDoIndex;
+  List toDoList = [];
+  Map<String, dynamic> _lastRemovedToDo;
+  int _lastRemovedToDoIndex;
 
-  static String get lastRemovedToDo => _lastRemovedToDo['title'];
+  // Singleton implementation below. 
+  static final ToDoController _singleton = ToDoController._internal();
 
-  static void addToDo(toDoTitle) {
+  factory ToDoController() {
+    return _singleton;
+  }
+
+  ToDoController._internal();
+
+  // Class methods.
+  String lastRemovedToDoTitle() {
+    print('Vou mostrar ${_lastRemovedToDo['title']}');
+    return _lastRemovedToDo['title'];
+  }
+
+  void addToDo(toDoTitle) {
     Map<String, dynamic> newToDo = Map();
 
     newToDo['title'] = toDoTitle;
@@ -18,7 +31,7 @@ class ToDoController {
     FileController.saveToDosToFile(toDoList);
   }
 
-  static void removeToDo(index) {
+  void removeToDo(index) {
     _lastRemovedToDo = Map.from(toDoList[index]);
     _lastRemovedToDoIndex = index;
     toDoList.removeAt(index);
@@ -26,12 +39,12 @@ class ToDoController {
     FileController.saveToDosToFile(toDoList);
   }
 
-  static void restoreLastDeletedToDo() {
+  void restoreLastDeletedToDo() {
     toDoList.insert(_lastRemovedToDoIndex, _lastRemovedToDo);
     FileController.saveToDosToFile(toDoList);
   }
 
-  static void sortToDos() {
+  void sortToDos() {
     toDoList.sort((toDoA, toDoB) {
       if (toDoA['done'] == toDoB['done']) return 1;
       if (!toDoA['done']) return -1;
@@ -41,7 +54,7 @@ class ToDoController {
     FileController.saveToDosToFile(toDoList);
   }
 
-  static void setToDoValue(index, value) {
+  void setToDoValue(index, value) {
     toDoList[index]['done'] = value;
     FileController.saveToDosToFile(toDoList);
   }

@@ -19,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final textFieldController = TextEditingController();
+  final toDos = ToDoController(); 
 
   @override
   void initState() {
@@ -26,7 +27,7 @@ class _HomeState extends State<Home> {
 
     FileController.readToDosFromFile().then((jsonData) {
       setState(() {
-        ToDoController.toDoList = json.decode(jsonData);
+        toDos.toDoList = json.decode(jsonData);
       });
     });
   }
@@ -51,7 +52,7 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
               child: InputSection((String newToDoTitle) {
                 setState(() {
-                  ToDoController.addToDo(newToDoTitle);
+                  toDos.addToDo(newToDoTitle);
                 });
               }),
             ),

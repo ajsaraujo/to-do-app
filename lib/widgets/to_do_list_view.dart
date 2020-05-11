@@ -7,11 +7,13 @@ class ToDoListView extends StatefulWidget {
 }
 
 class ToDoListViewState extends State<ToDoListView> {
+  final toDos = ToDoController();
+  
   Future<Null> _onRefresh() async {
     await Future.delayed(Duration(seconds: 1));
 
     setState(() {
-      ToDoController.sortToDos();
+      toDos.sortToDos();
     });
   }
 
@@ -27,11 +29,11 @@ class ToDoListViewState extends State<ToDoListView> {
         direction: DismissDirection.startToEnd,
         onDismissed: (direction) {
           setState(() {
-            ToDoController.removeToDo(index);
+            toDos.removeToDo(index);
 
             final undoSnackBar = SnackBar(
                 content: Text(
-                    'To do "${ToDoController.lastRemovedToDo}" removed',
+                    'To do "${toDos.lastRemovedToDoTitle()}" removed',
                     style: TextStyle(color: Theme.of(context).accentColor)),
                 backgroundColor: Theme.of(context).primaryColor,
                 duration: Duration(seconds: 3),
@@ -40,7 +42,7 @@ class ToDoListViewState extends State<ToDoListView> {
                     label: 'UNDO',
                     onPressed: () {
                       setState(() {
-                        ToDoController.restoreLastDeletedToDo();
+                        toDos.restoreLastDeletedToDo();
                       });
                     }));
 
@@ -49,13 +51,13 @@ class ToDoListViewState extends State<ToDoListView> {
           });
         },
         child: CheckboxListTile(
-            title: Text(ToDoController.toDoList[index]['title']),
-            value: ToDoController.toDoList[index]['done'],
+            title: Text(toDos.toDoList[index]['title']),
+            value: toDos.toDoList[index]['done'],
             checkColor: Theme.of(context).accentColor,
             activeColor: Theme.of(context).primaryColor,
             onChanged: (done) {
               setState(() {
-                ToDoController.setToDoValue(index, done);
+                toDos.setToDoValue(index, done);
               });
             }));
   }
@@ -68,7 +70,7 @@ class ToDoListViewState extends State<ToDoListView> {
             onRefresh: _onRefresh,
             child: ListView.builder(
                 padding: EdgeInsets.only(top: 10.0),
-                itemCount: ToDoController.toDoList.length,
+                itemCount: toDos.toDoList.length,
                 itemBuilder: _buildItem)));
   }
 }
