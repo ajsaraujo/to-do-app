@@ -11,7 +11,7 @@ class FileController {
 
   static Future<File> getColorFile() async {
     final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/color.json');
+    return File('${directory.path}/color.txt');
   }
 
   static Future<File> saveToDosToFile(toDoList) async {
@@ -22,7 +22,7 @@ class FileController {
 
   static Future<File> saveColorToFile(int colorValue) async {
     final file = await getColorFile();
-    print('Salvando ${colorValue} no arquivo...');
+    print('Salvando $colorValue no arquivo...');
     return file.writeAsString(colorValue.toString());
   }
 
@@ -30,7 +30,7 @@ class FileController {
     try {
       final file = await getColorFile();
       final colorAsString = await file.readAsString();
-      print('Eu li ${colorAsString} do arquivo');
+      print('Eu li $colorAsString do arquivo');
       return int.parse(colorAsString);
     } catch (err) {
       print(err);
@@ -44,6 +44,7 @@ class FileController {
       return file.readAsString();
     } catch (err) {
       print(err);
+      return '{}';
     }
   }
 }

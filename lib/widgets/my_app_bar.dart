@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final List<Widget> actions;
-  bool hasReturnButton; 
+  final bool hasReturnButton; 
 
   MyAppBar({this.title, this.actions, this.hasReturnButton = false});
   

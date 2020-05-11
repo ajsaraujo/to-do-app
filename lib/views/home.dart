@@ -9,7 +9,7 @@ import 'package:todo_list/widgets/my_app_bar.dart';
 import 'package:todo_list/widgets/to_do_list_view.dart';
 
 class Home extends StatefulWidget {
-  Function changeThemeCallback;
+  final Function changeThemeCallback;
 
   Home({this.changeThemeCallback});
 

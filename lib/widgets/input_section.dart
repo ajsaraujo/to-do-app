@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InputSection extends StatefulWidget {
-  Function callback;
+  final Function callback;
 
   InputSection(this.callback);
 

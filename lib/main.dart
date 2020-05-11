@@ -22,8 +22,9 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _loadColorFromFile() async {
       final colorValue = await FileController.readColorFromFile();
+      print('colorValue was $colorValue');
       _primaryColor =
-          colorValue == 0xFFFFFFFF ? Colors.blue : Color(colorValue);
+          colorValue == 0xFFFFFFF ? Colors.blue : Color(colorValue);
   }
 
   @override
