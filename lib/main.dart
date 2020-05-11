@@ -12,29 +12,22 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Color _primaryColor;
-  Color _accentColor;
-  Brightness _brightness;
 
-  void changeTheme(
-      {Color newPrimaryColor, Color newAccentColor, Brightness newBrightness}) {
-    setState(() async {
-      print('Oi, tô no callback!');
+  void changeTheme({Color newPrimaryColor}) async {
+    setState(() {
       _primaryColor = newPrimaryColor ?? _primaryColor;
-      _accentColor = newAccentColor ?? _accentColor;
-      _brightness = newBrightness ?? _brightness;
-
-      await FileController.saveColorToFile(_primaryColor.value);
     });
+    await FileController.saveColorToFile(_primaryColor.value);
+  }
+
+  Future<void> _loadColorFromFile() async {
+      final colorValue = await FileController.readColorFromFile();
+      _primaryColor =
+          colorValue == 0xFFFFFFFF ? Colors.blue : Color(colorValue);
   }
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _loadColorFromFile() async {
-      final colorValue = await FileController.readColorFromFile();
-      _primaryColor =
-          colorValue == 0xFFFFFFFF ? Colors.blue : Color(colorValue);
-    }
-
     return FutureBuilder(
         future: _loadColorFromFile(),
         builder: (context, snapshot) {
@@ -49,15 +42,10 @@ class _MyAppState extends State<MyApp> {
                 brightness: Brightness.light,
               ),
             );
-          }
-          else {
+          } else {
             return MaterialApp(
-              home: Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator()
-                )
-              )
-            );
+                home:
+                    Scaffold(body: Center(child: CircularProgressIndicator())));
           }
         });
   }
