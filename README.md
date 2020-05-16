@@ -1,12 +1,14 @@
-# todo_list
+## to-do-app
 
-A To Do app I created to practice Flutter. I started by following Daniel Ciolfi's tutorial, and after the tutorial ended I kept updating the app, refactoring and adding my own functionality. The app consisted only in a `main.dart` file, so I decided to better organize it with different files for views, widgets and controlling. Then I added the features of changing the app's main color and also editing existing To dos.
+This is a To Do app I created to practice Flutter. I started by following Daniel Ciolfi's tutorial. After it ended, I kept updating the app, refactoring and adding new functionality. The app consisted only of a `main.dart` file, which was kinda messy, so I decided to better organize it with different files for views, widgets, data and controlling. Then I added the features of changing the app's main color and also editing existing To dos.
 
 # features
 
 - [X] Create To dos
 - [X] Edit existing To dos
 - [X] Delete To dos
+- [X] Restore last deleted To do
+- [X] Sort To dos by done/undone
 - [X] Change the app's main color
 - [X] Persist changes
 
