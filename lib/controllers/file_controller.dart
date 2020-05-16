@@ -5,8 +5,12 @@ import 'package:path_provider/path_provider.dart';
 
 class FileController {
   static Future<File> getToDosFile() async {
+    /*
+      The following file names cannot be used:
+        - new_tasks.json
+    */
     final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/new_tasks.json');
+    return File('${directory.path}/todos.json');
   }
 
   static Future<File> getColorFile() async {

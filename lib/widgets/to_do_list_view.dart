@@ -8,7 +8,7 @@ class ToDoListView extends StatefulWidget {
 
 class ToDoListViewState extends State<ToDoListView> {
   final toDos = ToDoController();
-  
+
   Future<Null> _onRefresh() async {
     await Future.delayed(Duration(seconds: 1));
 
@@ -18,6 +18,7 @@ class ToDoListViewState extends State<ToDoListView> {
   }
 
   Widget _buildItem(context, index) {
+    String _textEditingBuffer = toDos.toDoList[index]['title'];
     return Dismissible(
         key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
         background: Container(
@@ -32,8 +33,7 @@ class ToDoListViewState extends State<ToDoListView> {
             toDos.removeToDo(index);
 
             final undoSnackBar = SnackBar(
-                content: Text(
-                    'To do "${toDos.lastRemovedToDoTitle()}" removed',
+                content: Text('To do "${toDos.lastRemovedToDoTitle()}" removed',
                     style: TextStyle(color: Theme.of(context).accentColor)),
                 backgroundColor: Theme.of(context).primaryColor,
                 duration: Duration(seconds: 3),
@@ -51,7 +51,18 @@ class ToDoListViewState extends State<ToDoListView> {
           });
         },
         child: CheckboxListTile(
-            title: Text(toDos.toDoList[index]['title']),
+            title: TextFormField(
+              initialValue: toDos.toDoList[index]['title'],
+              decoration: InputDecoration(
+                border: InputBorder.none,
+              ),
+              onChanged: (String value) {
+                _textEditingBuffer = value;
+              },
+              onEditingComplete: () {
+                toDos.setToDoTitle(index, _textEditingBuffer);
+              },
+            ),
             value: toDos.toDoList[index]['done'],
             checkColor: Theme.of(context).accentColor,
             activeColor: Theme.of(context).primaryColor,

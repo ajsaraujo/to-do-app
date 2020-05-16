@@ -54,8 +54,13 @@ class ToDoController {
     FileController.saveToDosToFile(toDoList);
   }
 
-  void setToDoValue(index, value) {
-    toDoList[index]['done'] = value;
+  void setToDoValue(index, booleanValue) {
+    toDoList[index]['done'] = booleanValue;
+    FileController.saveToDosToFile(toDoList);
+  }
+
+  void setToDoTitle(index, newTitle) {
+    toDoList[index]['title'] = newTitle;
     FileController.saveToDosToFile(toDoList);
   }
 }
