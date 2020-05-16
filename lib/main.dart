@@ -1,180 +1,53 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+import 'package:todo_list/controllers/file_controller.dart';
+import 'package:todo_list/route_generator.dart';
+import 'package:todo_list/views/home.dart';
 
-void main() => runApp(MaterialApp(
-      home: Home(),
-    ));
+void main() => runApp(MyApp());
 
-class Home extends StatefulWidget {
+class MyApp extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _HomeState extends State<Home> {
-  List _toDoList = [];
-  Map<String, dynamic> _lastRemovedToDo;
-  int _lastRemovedToDoIndex;
-  final newToDoController = TextEditingController();
+class _MyAppState extends State<MyApp> {
+  Color _primaryColor;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _readToDosFromFile().then((jsonData) {
-      setState(() {
-        _toDoList = json.decode(jsonData);
-      });
-    });
-  }
-
-  void _addToDo() {
+  void changeTheme({Color newPrimaryColor}) async {
     setState(() {
-      Map<String, dynamic> newToDo = Map();
-
-      newToDo['title'] = newToDoController.text;
-      newToDo['done'] = false;
-
-      _toDoList.add(newToDo);
-
-      newToDoController.clear();
-
-      _saveToDosToFile();
+      _primaryColor = newPrimaryColor ?? _primaryColor;
     });
+    await FileController.saveColorToFile(_primaryColor.value);
   }
 
-  Future<File> _getToDosFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/tasks.json');
-  }
-
-  Future<File> _saveToDosToFile() async {
-    String data = json.encode(_toDoList);
-    final file = await _getToDosFile();
-    return file.writeAsString(data);
-  }
-
-  Future<String> _readToDosFromFile() async {
-    try {
-      final file = await _getToDosFile();
-      return file.readAsString();
-    } catch (err) {
-      print(err);
-    }
-  }
-
-  Future<Null> _sortToDos() async {
-    await Future.delayed(Duration(seconds: 1));
-
-    setState(() {
-      _toDoList.sort((toDoA, toDoB) {
-        if (toDoA['done'] == toDoB['done']) return 0;
-        if (!toDoA['done']) return -1;
-        return 1;
-      });
-
-      _saveToDosToFile();
-    });
-  }
-
-  Widget _buildItem(context, index) {
-    return Dismissible(
-        key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
-        background: Container(
-          color: Colors.red,
-          child: Align(
-              alignment: Alignment(-0.9, 0.0),
-              child: Icon(Icons.delete_forever, color: Colors.white)),
-        ),
-        direction: DismissDirection.startToEnd,
-        onDismissed: (direction) {
-          setState(() {
-            _lastRemovedToDo = Map.from(_toDoList[index]);
-            _lastRemovedToDoIndex = index;
-            _toDoList.removeAt(index);
-            _saveToDosToFile();
-
-            final undoSnackBar = SnackBar(
-                content: Text('To do "${_lastRemovedToDo['title']}" removed',
-                    style: TextStyle(color: Colors.white)),
-                backgroundColor: Colors.blueAccent,
-                duration: Duration(seconds: 3),
-                action: SnackBarAction(
-                    textColor: Colors.white,
-                    label: 'UNDO',
-                    onPressed: () {
-                      setState(() {
-                        _toDoList.insert(
-                            _lastRemovedToDoIndex, _lastRemovedToDo);
-                        _saveToDosToFile();
-                      });
-                    }));
-
-            Scaffold.of(context).removeCurrentSnackBar();
-            Scaffold.of(context).showSnackBar(undoSnackBar);
-          });
-        },
-        child: CheckboxListTile(
-            title: Text(_toDoList[index]['title']),
-            value: _toDoList[index]['done'],
-            secondary: CircleAvatar(
-              backgroundColor:
-                  _toDoList[index]['done'] ? Colors.blueAccent : Colors.red,
-              child: Icon(
-                _toDoList[index]['done'] ? Icons.check : Icons.clear,
-                color: Colors.white,
-              ),
-            ),
-            onChanged: (done) {
-              setState(() {
-                _toDoList[index]['done'] = done;
-                _saveToDosToFile();
-              });
-            }));
+  Future<void> _loadColorFromFile() async {
+      final colorValue = await FileController.readColorFromFile();
+      print('colorValue was $colorValue');
+      _primaryColor =
+          colorValue == 0xFFFFFFF ? Colors.blue : Color(colorValue);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('To Dos'),
-          backgroundColor: Colors.blueAccent,
-          centerTitle: true,
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: newToDoController,
-                      decoration: InputDecoration(
-                        labelText: 'New To Do',
-                        labelStyle: TextStyle(color: Colors.blueAccent),
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    color: Colors.blueAccent,
-                    child: Text('ADD'),
-                    textColor: Colors.white,
-                    onPressed: _addToDo,
-                  )
-                ],
+    return FutureBuilder(
+        future: _loadColorFromFile(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MaterialApp(
+              home: Home(changeThemeCallback: changeTheme),
+              initialRoute: '/',
+              onGenerateRoute: RouteGenerator.generateRoute,
+              theme: ThemeData(
+                primaryColor: _primaryColor ?? Colors.blue,
+                accentColor: Colors.white,
+                brightness: Brightness.light,
               ),
-            ),
-            Expanded(
-                child: RefreshIndicator(
-                    onRefresh: _sortToDos,
-                    child: ListView.builder(
-                        padding: EdgeInsets.only(top: 10.0),
-                        itemCount: _toDoList.length,
-                        itemBuilder: _buildItem)))
-          ],
-        ));
+            );
+          } else {
+            return MaterialApp(
+                home:
+                    Scaffold(body: Center(child: CircularProgressIndicator())));
+          }
+        });
   }
 }
