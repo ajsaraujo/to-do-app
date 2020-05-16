@@ -52,6 +52,8 @@ class ToDoListViewState extends State<ToDoListView> {
         },
         child: CheckboxListTile(
             title: TextFormField(
+              textInputAction: TextInputAction.done,
+              maxLines: null,
               initialValue: toDos.toDoList[index]['title'],
               decoration: InputDecoration(
                 border: InputBorder.none,
