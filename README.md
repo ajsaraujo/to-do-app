@@ -8,7 +8,7 @@ This is a To Do app I created to practice Flutter. I started by following Daniel
 - [X] Edit existing To dos
 - [X] Delete To dos
 - [X] Restore last deleted To do
-- [X] Sort To dos by done/undone
+- [X] Sort To dos by done/not done
 - [X] Change the app's main color
 - [X] Persist changes
 
