@@ -2,7 +2,7 @@
 
 This is a To Do app I created to practice Flutter. I started by following Daniel Ciolfi's tutorial. After it ended, I kept updating the app, refactoring and adding new functionality. The app consisted only of a `main.dart` file, which was kinda messy, so I decided to better organize it with different files for views, widgets, data and controlling. Then I added the features of changing the app's main color and also editing existing To dos.
 
-# features
+## features
 
 - [X] Create To dos
 - [X] Edit existing To dos
